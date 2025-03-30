@@ -52,8 +52,6 @@ public class AllSensorsActivity extends AppCompatActivity {
     private Button logoutButton, homeButton;
 
     // TextViews for local BPM
-    private TextView text_ecg;
-    private TextView text_ppg_bpm;
 
     // Arrays for local BPM calculations
     private final ArrayList<ECGSample> ecgSamples = new ArrayList<>();
@@ -100,9 +98,6 @@ public class AllSensorsActivity extends AppCompatActivity {
         //signInButton = findViewById(R.id.signin);
         logoutButton = findViewById(R.id.logout);
         homeButton   = findViewById(R.id.home_button);
-
-        text_ecg     = findViewById(R.id.text_ecg);
-        text_ppg_bpm = findViewById(R.id.text_ppg_bpm);
 
         if (currentUser == null) {
             redirectToLogin();
@@ -207,13 +202,13 @@ public class AllSensorsActivity extends AppCompatActivity {
         mSocket.on("reconnect", args -> Log.d(TAG, "Socket reconnected."));
 
         // Data event listeners
-        mSocket.on("ecg_data", onNewEcgData);
+        //mSocket.on("ecg_data", onNewEcgData);
         mSocket.on("ppg_gravity_data", onNewGravityPpgData);
         mSocket.on("ppg_data", onNewDigitalPpgData);
         mSocket.on("tmp102_data", onNewTempData);
 
         // If your server also emits ppg_bpm
-        mSocket.on("ppg_bpm", onNewPpgBpm);
+        //mSocket.on("ppg_bpm", onNewPpgBpm);
     }
 
     @Override
@@ -229,11 +224,11 @@ public class AllSensorsActivity extends AppCompatActivity {
     protected void onPause() {
         super.onPause();
         if (mSocket != null) {
-            mSocket.off("ecg_data", onNewEcgData);
+            //mSocket.off("ecg_data", onNewEcgData);
             mSocket.off("ppg_gravity_data", onNewGravityPpgData);
             mSocket.off("ppg_data", onNewDigitalPpgData);
             mSocket.off("tmp102_data", onNewTempData);
-            mSocket.off("ppg_bpm", onNewPpgBpm);
+            //mSocket.off("ppg_bpm", onNewPpgBpm);
             mSocket.disconnect();
         }
     }
@@ -307,30 +302,29 @@ public class AllSensorsActivity extends AppCompatActivity {
 
     // ---- Socket Event Listeners ----
 
-    private final Emitter.Listener onNewEcgData = args -> runOnUiThread(() -> {
-        try {
-            JSONObject data = (JSONObject) args[0];
-            String timestamp = data.getString("timestamp");
-            double ecgValue = data.getDouble("value");
-            textTimestamp.setText("Last Update: " + timestamp);
-
-            // Plot on ECG chart
-            addEcgEntryToGraph((float) ecgValue);
-
-            // Local BPM (just as in your code)
-            long now = System.currentTimeMillis();
-            ecgSamples.add(new ECGSample(now, (float) ecgValue));
-            long windowMs = 10000;
-            while (!ecgSamples.isEmpty() && now - ecgSamples.get(0).timestamp > windowMs) {
-                ecgSamples.remove(0);
-            }
-            int ecgBpm = computeLocalBpm(ecgSamples, windowMs, 1.8f);
-            text_ecg.setText("ECG BPM: " + ecgBpm);
-
-        } catch (JSONException e) {
-            Log.e(TAG, "Error parsing ECG data", e);
-        }
-    });
+//    private final Emitter.Listener onNewEcgData = args -> runOnUiThread(() -> {
+//        try {
+//            JSONObject data = (JSONObject) args[0];
+//            String timestamp = data.getString("timestamp");
+//            double ecgValue = data.getDouble("value");
+//            textTimestamp.setText("Last Update: " + timestamp);
+//
+//            // Plot on ECG chart
+//            addEcgEntryToGraph((float) ecgValue);
+//
+//            // Local BPM (just as in your code)
+//            long now = System.currentTimeMillis();
+//            ecgSamples.add(new ECGSample(now, (float) ecgValue));
+//            long windowMs = 10000;
+//            while (!ecgSamples.isEmpty() && now - ecgSamples.get(0).timestamp > windowMs) {
+//                ecgSamples.remove(0);
+//            }
+//            int ecgBpm = computeLocalBpm(ecgSamples, windowMs, 1.8f);
+//
+//        } catch (JSONException e) {
+//            Log.e(TAG, "Error parsing ECG data", e);
+//        }
+//    });
 
     private final Emitter.Listener onNewGravityPpgData = args -> runOnUiThread(() -> {
         try {
@@ -348,7 +342,6 @@ public class AllSensorsActivity extends AppCompatActivity {
                 ppgSamples.remove(0);
             }
             int ppgBpm = computeLocalBpm(ppgSamples, windowMs, 600f);
-            text_ppg_bpm.setText("PPG BPM: " + ppgBpm);
 
         } catch (JSONException e) {
             Log.e(TAG, "Error parsing Gravity PPG data", e);
@@ -380,16 +373,16 @@ public class AllSensorsActivity extends AppCompatActivity {
         }
     });
 
-    private final Emitter.Listener onNewPpgBpm = args -> runOnUiThread(() -> {
-        try {
-            JSONObject data = (JSONObject) args[0];
-            int bpm = data.getInt("bpm");
-            // If you want to override local BPM with server's BPM:
-            // text_ppg_bpm.setText("PPG BPM: " + bpm);
-        } catch (JSONException e) {
-            Log.e(TAG, "Error parsing PPG BPM data", e);
-        }
-    });
+//    private final Emitter.Listener onNewPpgBpm = args -> runOnUiThread(() -> {
+//        try {
+//            JSONObject data = (JSONObject) args[0];
+//            int bpm = data.getInt("bpm");
+//            // If you want to override local BPM with server's BPM:
+//            // text_ppg_bpm.setText("PPG BPM: " + bpm);
+//        } catch (JSONException e) {
+//            Log.e(TAG, "Error parsing PPG BPM data", e);
+//        }
+//    });
 
     // Simple BPM peak detection
     private int computeLocalBpm(ArrayList<?> samples, long windowMs, float threshold) {
