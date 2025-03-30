@@ -94,7 +94,14 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content" />
 
-
+        <TextView
+            android:id="@+id/text_ecg"
+            android:text="-- bpm"
+            android:textColor="#28A745"
+            android:textSize="24sp"
+            android:textStyle="bold"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
     </LinearLayout>
 
     <!-- PPG Chart Container -->
@@ -142,7 +149,14 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content" />
 
-
+        <TextView
+            android:id="@+id/text_ppg_bpm"
+            android:text="-- bpm"
+            android:textColor="#28A745"
+            android:textSize="24sp"
+            android:textStyle="bold"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
     </LinearLayout>
 
     <!-- Timestamp -->
