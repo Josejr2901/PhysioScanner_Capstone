@@ -52,8 +52,6 @@ public class AllSensorsActivity extends AppCompatActivity {
     private Button logoutButton, homeButton;
 
     // TextViews for local BPM
-    private TextView text_ecg;
-    private TextView text_ppg_bpm;
 
     // Arrays for local BPM calculations
     private final ArrayList<ECGSample> ecgSamples = new ArrayList<>();
@@ -100,9 +98,6 @@ public class AllSensorsActivity extends AppCompatActivity {
         //signInButton = findViewById(R.id.signin);
         logoutButton = findViewById(R.id.logout);
         homeButton   = findViewById(R.id.home_button);
-
-        text_ecg     = findViewById(R.id.text_ecg);
-        text_ppg_bpm = findViewById(R.id.text_ppg_bpm);
 
         if (currentUser == null) {
             redirectToLogin();
@@ -324,8 +319,7 @@ public class AllSensorsActivity extends AppCompatActivity {
             while (!ecgSamples.isEmpty() && now - ecgSamples.get(0).timestamp > windowMs) {
                 ecgSamples.remove(0);
             }
-            int ecgBpm = computeLocalBpm(ecgSamples, windowMs, 1.8f);
-            text_ecg.setText("ECG BPM: " + ecgBpm);
+            //int ecgBpm = computeLocalBpm(ecgSamples, windowMs, 1.8f);
 
         } catch (JSONException e) {
             Log.e(TAG, "Error parsing ECG data", e);
@@ -347,8 +341,7 @@ public class AllSensorsActivity extends AppCompatActivity {
             while (!ppgSamples.isEmpty() && now - ppgSamples.get(0).timestamp > windowMs) {
                 ppgSamples.remove(0);
             }
-            int ppgBpm = computeLocalBpm(ppgSamples, windowMs, 600f);
-            text_ppg_bpm.setText("PPG BPM: " + ppgBpm);
+            //int ppgBpm = computeLocalBpm(ppgSamples, windowMs, 600f);
 
         } catch (JSONException e) {
             Log.e(TAG, "Error parsing Gravity PPG data", e);
